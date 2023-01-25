@@ -4,10 +4,11 @@
     <h1>{% block title %} Email analytics {% endblock %}</h1>
     <div class="content">
         {% for myemail in myemails %}
-        <p><b>{{ myemail.id}}</b></p>
+        <p><b>{{ myemail.subject}}</b></p>
         <p>{{ myemail.date}}</p>
         <p><i>{{ myemail.label}}</i></p>
-        <p> {{ myemail.sender }} {{ myemail.recipient }}</p>
+        <p> {{ myemail.sender }} </p>
+        <p> {{ myemail.recipient }} </p>
         {% endfor %} 
     </div>
 
