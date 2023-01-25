@@ -45,6 +45,4 @@ def index():
         db.session.commit()
     myemails = MyEmail.query.all()
 
-    print(db.session.query(myemail.sender,func.count(myemail.sender)).groupby(myemail.sender).all())
-
     return render_template('index.html', myemails=myemails)
