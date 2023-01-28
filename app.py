@@ -53,5 +53,5 @@ def index():
     labels = [row[0] for row in result]
     values = [row[1] for row in result]
 
-    return render_template('index.html', title='Total count of email labels', max=50, labels=labels, values=values)
+    return render_template('index.html', title='Total count of email labels', max=10, labels=labels, values=values)
 
