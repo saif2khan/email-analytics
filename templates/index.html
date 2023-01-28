@@ -2,16 +2,10 @@
 
 {% block content %}
     <h1>{% block title %} Email analytics {% endblock %}</h1>
-    <div class="content">
-        {% for myemail in myemails %}
-        <p><b>{{ myemail.subject}}</b></p>
-        <p>{{ myemail.date}}</p>
-        <p><i>{{ myemail.label}}</i></p>
-        <p> {{ myemail.sender }} </p>
-        <p> {{ myemail.recipient }} </p>
-        {% endfor %} 
-    </div>
-
-
+    
+    {% for r in result %}
+    <p> {{ r[0] }} </p>
+    <p> {{ r[1] }} </p>
+    {% endfor %}
 
 {% endblock %}

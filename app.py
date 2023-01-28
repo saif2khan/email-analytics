@@ -35,6 +35,9 @@ class MyEmail(db.Model):
     date = db.Column(db.Integer)
     label = db.Column(db.String)
 
+with app.app_context():
+    db.create_all()
+
 @app.route('/')
 def index():
     db.session.query(MyEmail).delete()
@@ -43,6 +46,12 @@ def index():
             date=datetime.datetime.fromtimestamp(int(message.date)).strftime('%Y-%m-%d %H:%M:%S'),label=message.labels[0]['name'])
         db.session.add(myemail)
         db.session.commit()
-    myemails = MyEmail.query.all()
+    #myemails = MyEmail.query.all()
 
-    return render_template('index.html', myemails=myemails)
+    result = db.session.query(MyEmail).with_entities(MyEmail.label, db.func.count(MyEmail.label).label('Count')).group_by(MyEmail.label).all()
+
+    labels = [row[0] for row in result]
+    values = [row[1] for row in result]
+
+    return render_template('bar_chart.html', title='Total count of email labels', max=50, labels=labels, values=values, result=result)
+
