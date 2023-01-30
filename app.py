@@ -38,6 +38,11 @@ class MyEmail(db.Model):
 with app.app_context():
     db.create_all()
 
+colors = [
+    "#F7464A", "#46BFBD", "#FDB45C", "#FEDCBA",
+    "#ABCDEF", "#DDDDDD", "#ABCABC", "#4169E1",
+    "#C71585", "#FF4500", "#FEDCBA", "#46BFBD"]
+
 # Use Flask-Dance to automatically set up the OAuth endpoints for Nylas.
 # For more information, check out the documentation: http://flask-dance.rtfd.org
 nylas_bp = make_nylas_blueprint()
@@ -47,10 +52,12 @@ app.register_blueprint(nylas_bp, url_prefix="/login")
 app.wsgi_app = ProxyFix(app.wsgi_app)
 
 @app.route('/')
-
 def hello():
     return render_template('hello.html')
 
+@app.route('/about')
+def about():
+    return render_template('about.html')
 
 @app.route('/emailanalytics')
 def index():
@@ -76,6 +83,7 @@ def index():
     db.session.query(MyEmail).delete()
     #Fetch messages
     messages = client.messages
+    account = client.account
     for message in messages:
         myemail = MyEmail(id=message.id,subject=message.subject,sender=message.from_[0]['name'],recipient=message.to[0]['name'],\
             date=datetime.datetime.fromtimestamp(int(message.date)).strftime('%Y-%m-%d %H:%M:%S'),label=message.labels[0]['name'])
@@ -87,7 +95,12 @@ def index():
     labels = [row[0] for row in result]
     values = [row[1] for row in result]
 
-    return render_template('index.html', title='Total count of email types', max=30, labels=labels, values=values)
+    result_pie = db.session.query(MyEmail).with_entities(MyEmail.sender, db.func.count(MyEmail.sender).label('Count')).group_by(MyEmail.sender).all()
+
+    labels_pie = [row[0] for row in result_pie]
+    values_pie = [row[1] for row in result_pie]
+
+    return render_template('index.html', labels=labels, values=values, set=zip(values_pie,labels_pie,colors), account=account)
 
 
 if __name__ == "__main__":

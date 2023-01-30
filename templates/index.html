@@ -4,7 +4,26 @@
 
 <center>
     <h1>{% block title %} Email analytics {% endblock %}</h1>
-    <canvas id="chart" width="600" height="400"></canvas>
+    <p>You've successfully connected to Email analytics! Here's some
+      information that I got from the Nylas API, to prove it:</p>
+   
+   <table class="table table-bordered">
+     {% for key, value in account.items() %}
+     <tr>
+       <th>{{ key }}</th>
+       <td>{{ value }}</td>
+     </tr>
+     {% endfor %}
+   </table>
+   
+   <p>If you want to use this app with another email id, clear your browser cookies
+      or open a new browser in incognito mode.</p>
+
+      <canvas id="chart1" width="600" height="400"></canvas>
+      <canvas id="chart2" width="600" height="400"></canvas>
+    
+      <!--  Bar chart  --> 
+      
     <script>
       // bar chart data
       var barData = {
@@ -28,10 +47,10 @@
       }
 
      // get bar chart canvas
-     var mychart = document.getElementById("chart").getContext("2d");
+     var mychart = document.getElementById("chart1").getContext("2d");
 
        steps = 10
-       max = {{max}}
+       max = 50
 
      // draw bar chart
      new Chart(mychart).Bar(barData, {
@@ -47,5 +66,30 @@
      );
 
     </script>
+
+  <!--  Pie chart  --> 
+
+    <script>
+      var pieData = [
+        {% for item, label, colors in set %}
+          {
+            value: {{item}},
+            label: "{{label}}",
+            color : "{{colors}}"
+          },
+        {% endfor %}
+      ];
+
+      // get pie chart canvas
+      var mychart = document.getElementById("chart2").getContext("2d");
+      steps = 10
+      max = 12
+
+      // draw pie chart
+      new Chart(mychart).Pie(pieData);
+
+    </script>
+
+
   </center>
   {% endblock %}
