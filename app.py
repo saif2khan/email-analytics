@@ -47,6 +47,12 @@ app.register_blueprint(nylas_bp, url_prefix="/login")
 app.wsgi_app = ProxyFix(app.wsgi_app)
 
 @app.route('/')
+
+def hello():
+    return render_template('hello.html')
+
+
+@app.route('/emailanalytics')
 def index():
     
     # If the user has already connected to Nylas via OAuth,
