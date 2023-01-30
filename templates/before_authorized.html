@@ -2,23 +2,13 @@
 {% block content %}
 {% if not insecure_override %}
 <div class="well hidden">
-  <h2>Warning</h2>
-  <p>OAuth requires HTTPS, and this page is loaded via insecure HTTP.
-    If you try to connect to Nylas like this, it will fail.
-    To fix this problem, serve this website over HTTPS.
-  </p>
-  <p>Since this is just an example, you can disable this requirement by
-    setting the <code>OAUTHLIB_INSECURE_TRANSPORT</code> environment
-    variable to <code>1</code> before running this example again.
-    However, you will <em>not</em> be able to do this when running
-    in production.
-  </p>
+  <h2>Welcome to Email Analytics application</h2>
 </div>
 {% endif %}
 
-<p>Thanks for giving Nylas a try! Next, you need to click this button
-   to connect to Nylas via hosted OAuth.</p>
-<a href="{{ url_for("nylas.login") }}" class="btn btn-primary">Connect to Nylas</a>
+<p>You need to click this button
+   to connect your email account.</p>
+<a href="{{ url_for("nylas.login") }}" class="btn btn-primary">Connect your Email</a>
 
 <script type="text/javascript">
   if (location.protocol === "http:") {
