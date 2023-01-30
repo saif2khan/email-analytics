@@ -95,33 +95,9 @@ def index():
     # We'll use the Nylas client to fetch information from Nylas
     # about the current user, and pass that to the template.
     account = client.account
-    return render_template("after_authorized.html", account=account)
-
-
-def ngrok_url():
-    """
-    If ngrok is running, it exposes an API on port 4040. We can use that
-    to figure out what URL it has assigned, and suggest that to the user.
-    https://ngrok.com/docs#list-tunnels
-    """
-    try:
-        ngrok_resp = requests.get("http://localhost:4040/api/tunnels")
-    except requests.ConnectionError:
-        # I guess ngrok isn't running.
-        return None
-    ngrok_data = ngrok_resp.json()
-    secure_urls = [
-        tunnel["public_url"]
-        for tunnel in ngrok_data["tunnels"]
-        if tunnel["proto"] == "https"
-    ]
-    return secure_urls[0]
+    return render_template("index.html", account=account)
 
 
 # When this file is executed, run the Flask web server.
 if __name__ == "__main__":
-    url = ngrok_url()
-    if url:
-        print(" * Visit {url} to view this Nylas example".format(url=url))
-
     app.run()
