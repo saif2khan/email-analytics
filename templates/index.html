@@ -2,24 +2,16 @@
 
 {% block content %}
 
-<center>
-    <h1>{% block title %} Email analytics {% endblock %}</h1>
-    <p>You've successfully connected to Email analytics! Here's some
-      information that I got from the Nylas API, to prove it:</p>
-   
-   <table class="table table-bordered">
-     {% for key, value in account.items() %}
-     <tr>
-       <th>{{ key }}</th>
-       <td>{{ value }}</td>
-     </tr>
-     {% endfor %}
-   </table>
-   
-   <p>If you want to use this app with another email id, clear your browser cookies
-      or open a new browser in incognito mode.</p>
 
+    <h3>{% block title %} Email analytics {% endblock %}</h3> 
+
+    <center>
+     <p> <b> Hello {{ name }}, Welcome to Email Analytics 0.1 ! </b></p>
+    <p>If you want to use this app with another email id, please clear your browser cookies
+      or open a new browser in incognito mode.</p>
+      <p> 1. Email labels </p>
       <canvas id="chart1" width="600" height="400"></canvas>
+      <p> 2. Email senders </p>
       <canvas id="chart2" width="600" height="400"></canvas>
     
       <!--  Bar chart  --> 

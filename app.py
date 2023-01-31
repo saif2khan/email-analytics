@@ -5,7 +5,7 @@ import os
 import sys
 import textwrap
 
-import requests
+import requests, jmespath
 from werkzeug.middleware.proxy_fix import ProxyFix
 from flask_dance.contrib.nylas import make_nylas_blueprint, nylas
 
@@ -45,7 +45,7 @@ colors = [
 
 # Use Flask-Dance to automatically set up the OAuth endpoints for Nylas.
 # For more information, check out the documentation: http://flask-dance.rtfd.org
-nylas_bp = make_nylas_blueprint()
+nylas_bp = make_nylas_blueprint(scope="email.modify,email.send,calendar,contacts,room_resources.read_only")
 app.register_blueprint(nylas_bp, url_prefix="/login")
 
 # Teach Flask how to find out that it's behind an ngrok proxy
@@ -84,6 +84,8 @@ def index():
     #Fetch messages
     messages = client.messages
     account = client.account
+    name = jmespath.search('name',account)
+
     for message in messages:
         myemail = MyEmail(id=message.id,subject=message.subject,sender=message.from_[0]['name'],recipient=message.to[0]['name'],\
             date=datetime.datetime.fromtimestamp(int(message.date)).strftime('%Y-%m-%d %H:%M:%S'),label=message.labels[0]['name'])
@@ -100,7 +102,7 @@ def index():
     labels_pie = [row[0] for row in result_pie]
     values_pie = [row[1] for row in result_pie]
 
-    return render_template('index.html', labels=labels, values=values, set=zip(values_pie,labels_pie,colors), account=account)
+    return render_template('index.html', labels=labels, values=values, set=zip(values_pie,labels_pie,colors), name=name)
 
 
 if __name__ == "__main__":
