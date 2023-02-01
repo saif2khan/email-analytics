@@ -45,7 +45,7 @@ colors = [
 
 # Use Flask-Dance to automatically set up the OAuth endpoints for Nylas.
 # For more information, check out the documentation: http://flask-dance.rtfd.org
-nylas_bp = make_nylas_blueprint(scope="email.modify,email.send,calendar,contacts,room_resources.read_only")
+nylas_bp = make_nylas_blueprint()
 app.register_blueprint(nylas_bp, url_prefix="/login")
 
 # Teach Flask how to find out that it's behind an ngrok proxy
