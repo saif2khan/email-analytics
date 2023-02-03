@@ -48,19 +48,42 @@ app.register_blueprint(nylas_bp, url_prefix="/login")
 def about():
     return render_template('about.html')
 
+@app.route('/logout',methods=['POST'])
+def logout():
+    #Logout flow
+    if request.method == 'POST':
+    #if request.form.get('action1') == 'Logout':
+        db.session.query(MyEmail).delete()
+        client = APIClient(
+        client_id=app.config["NYLAS_OAUTH_CLIENT_ID"],
+        client_secret=app.config["NYLAS_OAUTH_CLIENT_SECRET"],
+        access_token=nylas.access_token
+    )
+        logout_user()
+        client.revoke_all_tokens()
+        del nylas_bp.token
+    return redirect(url_for('index'))
+
 @app.route('/', methods=['GET','POST'])
 def index():
 
     # If the user has already connected to Nylas via OAuth,
     # `nylas.authorized` will be True. Otherwise, it will be False.
-
-    if not nylas.authorized:
+    print(nylas.authorized)
+    try:
+        
+        if not nylas.authorized:
         # OAuth requires HTTPS. The template will display a handy warning,
         # unless we've overridden the check.
-        return render_template(
+            return render_template(
             "before_authorized.html",
             insecure_override=os.environ.get("OAUTHLIB_INSECURE_TRANSPORT")
         )
+    except Exception as e:
+        print(e)
+        return render_template(
+            "before_authorized.html",
+            insecure_override=os.environ.get("OAUTHLIB_INSECURE_TRANSPORT"))
 
     # If we've gotten to this point, then the user has already connected
     # to Nylas via OAuth. Let's set up the SDK client with the OAuth token:
@@ -69,14 +92,6 @@ def index():
         client_secret=app.config["NYLAS_OAUTH_CLIENT_SECRET"],
         access_token=nylas.access_token
     )
-    #Logout flow
-    if request.method == 'POST':
-        if request.form.get('action1') == 'Logout':
-            db.session.query(MyEmail).delete()
-            logout_user()
-            client.revoke_all_tokens()
-            del nylas_bp.token
-            return render_template('before_authorized.html')
     
     db.session.query(MyEmail).delete()
     
