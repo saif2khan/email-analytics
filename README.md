@@ -1,2 +1,2 @@
 # email-analytics
-WIP
+Access the app on >> https://saifkhan.ca
