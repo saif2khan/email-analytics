@@ -6,7 +6,6 @@ import sys
 import textwrap
 
 import requests, jmespath
-from werkzeug.middleware.proxy_fix import ProxyFix
 from flask_dance.contrib.nylas import make_nylas_blueprint, nylas
 from flask_login import logout_user
 
@@ -45,24 +44,22 @@ colors = [
 nylas_bp = make_nylas_blueprint()
 app.register_blueprint(nylas_bp, url_prefix="/login")
 
-# Teach Flask how to find out that it's behind an ngrok proxy
-app.wsgi_app = ProxyFix(app.wsgi_app)
-
 @app.route('/about')
 def about():
     return render_template('about.html')
 
 @app.route('/', methods=['GET','POST'])
 def index():
-    
+
     # If the user has already connected to Nylas via OAuth,
     # `nylas.authorized` will be True. Otherwise, it will be False.
+
     if not nylas.authorized:
         # OAuth requires HTTPS. The template will display a handy warning,
         # unless we've overridden the check.
         return render_template(
             "before_authorized.html",
-            insecure_override=os.environ.get("OAUTHLIB_INSECURE_TRANSPORT"),
+            insecure_override=os.environ.get("OAUTHLIB_INSECURE_TRANSPORT")
         )
 
     # If we've gotten to this point, then the user has already connected
@@ -70,16 +67,19 @@ def index():
     client = APIClient(
         client_id=app.config["NYLAS_OAUTH_CLIENT_ID"],
         client_secret=app.config["NYLAS_OAUTH_CLIENT_SECRET"],
-        access_token=nylas.access_token,
+        access_token=nylas.access_token
     )
-    
+    #Logout flow
     if request.method == 'POST':
         if request.form.get('action1') == 'Logout':
             db.session.query(MyEmail).delete()
+            logout_user()
             client.revoke_all_tokens()
+            del nylas_bp.token
             return render_template('before_authorized.html')
     
     db.session.query(MyEmail).delete()
+    
     #Fetch messages
     messages = client.messages
     account = client.account
