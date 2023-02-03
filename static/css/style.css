@@ -4,3 +4,9 @@ h1 {
     text-align: center;
     padding: 10px;
 }
+
+#submit {
+  position:absolute;
+  top:0;
+  right:0;
+}

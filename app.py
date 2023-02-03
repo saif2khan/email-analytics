@@ -8,13 +8,10 @@ import textwrap
 import requests, jmespath
 from werkzeug.middleware.proxy_fix import ProxyFix
 from flask_dance.contrib.nylas import make_nylas_blueprint, nylas
-
-#Load env variables
-from dotenv import load_dotenv
-load_dotenv()
+from flask_login import logout_user
 
 import datetime
-from flask import Flask, render_template, request, url_for, redirect
+from flask import Flask, render_template, request, url_for, redirect, session
 from flask_sqlalchemy import SQLAlchemy
 from nylas import APIClient
 from sqlalchemy.sql import func
@@ -51,7 +48,7 @@ app.register_blueprint(nylas_bp, url_prefix="/login")
 # Teach Flask how to find out that it's behind an ngrok proxy
 app.wsgi_app = ProxyFix(app.wsgi_app)
 
-@app.route('/')
+@app.route('/hello')
 def hello():
     return render_template('hello.html')
 
@@ -59,7 +56,7 @@ def hello():
 def about():
     return render_template('about.html')
 
-@app.route('/emailanalytics')
+@app.route('/', methods=['GET','POST'])
 def index():
     
     # If the user has already connected to Nylas via OAuth,
@@ -79,6 +76,12 @@ def index():
         client_secret=app.config["NYLAS_OAUTH_CLIENT_SECRET"],
         access_token=nylas.access_token,
     )
+    
+    if request.method == 'POST':
+        if request.form.get('action1') == 'Logout':
+            db.session.query(MyEmail).delete()
+            client.revoke_all_tokens()
+            return render_template('before_authorized.html')
     
     db.session.query(MyEmail).delete()
     #Fetch messages

@@ -6,9 +6,13 @@
 </div>
 {% endif %}
 
-<p>You need to click this button
-   to connect your Google Workspace email account. Gmail accounts will not be connected</p>
-<a href="{{ url_for("nylas.login") }}" class="btn btn-primary">Connect your Email</a>
+<p>You need to click this button to connect your Nylas Google Workspace email account. Gmail accounts will not be connected.</p>
+   
+<p>You can always logout of the application which will remove your data from our system and revoke your access token immediately.</p>
+
+<p>Check our code base on <a href="https://github.com/saif2khan/email-analytics" target="_blank"><img src="{{ url_for('static', filename='github.jpeg') }}" width="100"> </a> </p>
+<br>
+ <a href="{{ url_for("nylas.login") }}" class="btn btn-primary">Connect your Email</a>
 
 <script type="text/javascript">
   if (location.protocol === "http:") {
