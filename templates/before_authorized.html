@@ -2,10 +2,12 @@
 {% block content %}
 {% if not insecure_override %}
 <div class="well hidden">
-  <h2>Welcome to Email Analytics application</h2>
+  <br>
+  <h2> Welcome to {% block title %} Email Analytics! {% endblock %}</h2>
 </div>
 {% endif %}
 
+<br>
 <p>You need to connect your Nylas Google Workspace email account. Gmail accounts will not be connected.</p>
    
 <p>You can always logout of the application which will <u>remove your data from our system and revoke your access token immediately.</u></p>
