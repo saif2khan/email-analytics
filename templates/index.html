@@ -2,23 +2,44 @@
 
 {% block content %}
 <br>
+<div class="container-fluid">
+  
+<div class="row">
+<div class = "col-lg-6">
+<h3>{% block title %} Email Analytics (Alpha){% endblock %}</h3>
+</div>
+<div class = "col-lg-6">
+<p align="right">Logged in as {{ name }}</p>
+</div>
+</div>
+
+<div class="row">
+<div class = "col-lg-12">
 <form method="post" action="/">
   <input type="submit" class="btn btn-warning float-right" value="Logout" name="action1"/><br><br>
 </form>
+</div>
+</div>
 
-    <h3>{% block title %} Email analytics {% endblock %}</h3> 
+</div>
 
+<div class="container-fluid">
+    <br>
     <center>
-     <p> <b> Hello {{ name }}, Welcome to Email Analytics 0.1 ! </b></p>
-    <p>If you want to use this app with another email id, please clear your browser cookies
-      or open a new browser in incognito mode.</p>
-      
-      <p> 1. Email labels </p>
+     <div class="row">
+      <div class = "col-lg-6">
+      <p> 1. Email label </p>
       <canvas id="chart1" width="600" height="400"></canvas>
-      <p> 2. Email senders </p>
+      </div>
+      <div class = "col-lg-6">
+      <p> 2. Email sender </p>
       <canvas id="chart2" width="600" height="400"></canvas>
-    
-      <!--  Bar chart  --> 
+      </div>
+      </div>
+    </center>
+  </div>
+      
+  <!--  Bar chart  --> 
       
     <script>
       // bar chart data
@@ -79,13 +100,10 @@
       // get pie chart canvas
       var mychart = document.getElementById("chart2").getContext("2d");
       steps = 10
-      max = 12
+      max = 8
 
       // draw pie chart
       new Chart(mychart).Pie(pieData);
 
     </script>
-
-
-  </center>
   {% endblock %}

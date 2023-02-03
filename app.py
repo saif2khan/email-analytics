@@ -48,10 +48,6 @@ app.register_blueprint(nylas_bp, url_prefix="/login")
 # Teach Flask how to find out that it's behind an ngrok proxy
 app.wsgi_app = ProxyFix(app.wsgi_app)
 
-@app.route('/hello')
-def hello():
-    return render_template('hello.html')
-
 @app.route('/about')
 def about():
     return render_template('about.html')
