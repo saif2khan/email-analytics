@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div>
+<center>
+<br>
+<p>{% block title %} Test {% endblock %}</p>
+    hi {{ name }}
+
+    <div class="row">
+        <div class = "col-lg-12">
+        <form method="post" action="/logout">
+          <input type="submit" class="btn btn-warning float-right" value="Logout" name="action1"/><br><br>
+        </form>
+        </div>
+</center>
+</div>
+{% endblock %}

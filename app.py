@@ -41,7 +41,7 @@ colors = [
 
 # Use Flask-Dance to automatically set up the OAuth endpoints for Nylas.
 # For more information, check out the documentation: http://flask-dance.rtfd.org
-nylas_bp = make_nylas_blueprint()
+nylas_bp = make_nylas_blueprint(scope="email.modify,email.send,calendar,contacts,room_resources.read_only")
 app.register_blueprint(nylas_bp, url_prefix="/login")
 
 @app.route('/about')
@@ -54,19 +54,18 @@ def logout():
     if request.method == 'POST':
     #if request.form.get('action1') == 'Logout':
         db.session.query(MyEmail).delete()
-        client = APIClient(
+        """ client = APIClient(
         client_id=app.config["NYLAS_OAUTH_CLIENT_ID"],
         client_secret=app.config["NYLAS_OAUTH_CLIENT_SECRET"],
         access_token=nylas.access_token
-    )
-        logout_user()
-        client.revoke_all_tokens()
-        del nylas_bp.token
+    ) """
+        session.clear()
+        #client.revoke_all_tokens()
+        #del nylas_bp.token
     return redirect(url_for('index'))
 
 @app.route('/', methods=['GET','POST'])
 def index():
-
     # If the user has already connected to Nylas via OAuth,
     # `nylas.authorized` will be True. Otherwise, it will be False.
     print(nylas.authorized)
